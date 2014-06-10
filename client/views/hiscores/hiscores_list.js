@@ -1,10 +1,12 @@
 Template.hiscoresList.helpers({
   hiscores: function() {
     return Hiscores.find();
-  }
+  },
 
-  scoreData: {"theStats" : []};
-  scoreArea: document.getElementById("scoreboard");
+  scoreData: {"theStats" : []},
+
+  // FIXME: DOM reference
+  scoreArea: document.getElementById("scoreboard"),
 
   //add and store when 'add name' button is clicked
   saveScore: function() {
@@ -30,7 +32,7 @@ Template.hiscoresList.helpers({
 
     reSet();
     displayScore();
-  }
+  },
 
   //add name and score to leaderboard
   displayScore: function() {
@@ -56,17 +58,17 @@ Template.hiscoresList.helpers({
       for ( var i = 0; i < numScores; i++ ){
         var li = document.createElement("ol");
         li.innerHTML = "<em>" + convertObj.theStats[i].player + "</em>" + "<br> score: " + convertObj.theStats[i].score;
-        scoreArea.appendChild(li);
+        scoreArea.appendChild(li); // FIXME: DOM reference
       }
     }
-  }
+  },
 
   clearDisplay: function() {
     var theLi = document.getElementsByTagName("ol");
     while (theLi[0]) theLi[0].parentNode.removeChild(theLi[0]);
-  }
+  },
 
-  //code for sorting obtained from http://stackoverflow.com/questions/979256/how-to-sort-an-array-of-javascript-objects
+  // code for sorting obtained from http://stackoverflow.com/questions/979256/how-to-sort-an-array-of-javascript-objects
   sortBy: function (field, reverse, primer) {
     var key = function (x) {return primer ? primer(x[field]) : x[field]};
 
@@ -75,7 +77,7 @@ Template.hiscoresList.helpers({
       return ((A < B) ? +1 :
              (A > B) ? -1 : 0) * [-1,1][+!!reverse];
     }
-  }
+  },
 
   sortScores: function(objects, key) {
     objects.sort(sortBy('score', true, parseInt));
