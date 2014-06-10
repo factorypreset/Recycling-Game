@@ -18,6 +18,9 @@ Template.screens.rendered = function() {
 
   var nameField = document.getElementById("user-name");
 
+  var theCount = document.getElementById("count");
+  var theScore = document.getElementById("score");
+
   function startGame(){
     reSet();
 
@@ -66,6 +69,7 @@ Template.screens.rendered = function() {
       count = 20;
     }
     //reset counter to 20 seconds
+    // FIXME: these vars appear to not have values. maybe template not loaded yet.
     theCount.innerHTML = 20;
 
     //reset score to zero
