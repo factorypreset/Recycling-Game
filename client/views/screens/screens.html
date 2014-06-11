@@ -1,28 +1,28 @@
 <template name="screens">
-	<section id="popup-screens" class="">
-		<div id="introScreen" class="screen end-screen">
-			<div id="intro">	
-				<h1>Which Bin?</h1>
-				<h3>Instructions:</h3>
-				<ul>
-					<li>Dispose of as many items as possible in <span class="highlight">20 seconds</span>!</li> <li>CORRECT BIN, gain 10 points</li>
-					<li>WRONG BIN, lose 10 points</li>
-					<li><span class="highlight">Achieve more than 100 points</span> to add your name to the leaderboard!</li>
-				</ul>				
-			</div>
-			<p>Good luck!</p>
-            <input id="start-button" class="awesome-buts" type="button" value="PLAY">
-		</div>
-		<div id="endScreen" class="no-screen">
-			<p id="saveScoreOpt">	</p>
-			<div id="name-btn-Area">
-	            <input id="user-name" maxlength="9" type="text" value="">
-				<input id="save-button" class="awesome-buts" type="button" value="Add Name">
-		</div>
+  <section id="popup-screens" class="">
+    <div id="introScreen" class="screen end-screen">
+      <div id="intro">
+        <h1>Which Bin?</h1>
+        <h3>Instructions:</h3>
+        <ul>
+          <li>Dispose of as many items as possible in <span class="highlight">20 seconds</span>!</li> <li>CORRECT BIN, gain 10 points</li>
+          <li>WRONG BIN, lose 10 points</li>
+          <li><span class="highlight">Achieve more than 100 points</span> to add your name to the leaderboard!</li>
+        </ul>
+      </div>
+      <p>Good luck!</p>
+            <input id="start-button" class="start-button awesome-buts" type="button" value="PLAY">
+    </div>
+    <div id="endScreen" class="no-screen">
+      <p id="saveScoreOpt">{{{saveScoreOptMsg}}}</p>
+      <div id="name-btn-Area">
+              <input id="user-name" maxlength="9" type="text" value="">
+        <input id="save-button" class="awesome-buts" type="button" value="Add Name">
+    </div>
             <div id="btn-Area">
-				<input id="playAgain-button" class="awesome-buts" type="button" value="Play Again">
-				<input id="end-button" class="awesome-buts" type="button" value="End Game">
+        <input id="playAgain-button" class="start-button awesome-buts" type="button" value="Play Again">
+        <input id="end-button" class="awesome-buts" type="button" value="End Game">
             </div>
-		</div>
-	</section>
+    </div>
+  </section>
 </template>

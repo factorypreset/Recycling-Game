@@ -1,98 +1,67 @@
-Template.screens.rendered = function() {
+Template.screens.saveScoreOptMsg = function() {
+  return Session.get("saveScoreOptMsg") || "";
+}
 
-  var screenArea = document.getElementById("popup-screens");
-  var introScreen = document.getElementById("introScreen");
-  var endScreen = document.getElementById("endScreen");
+Template.screens.events = {
+  'click .start-button': function(event) {
+    var count = 20;
+    Session.set("count", count);
+    Session.set("score", 0);
 
-  var startBtn = document.getElementById("start-button");
-  startBtn.addEventListener( "click", startGame, false );
+    $("#popup-screens").toggleClass("invisible");
 
-  var saveBtn = document.getElementById("save-button");
-  saveBtn.addEventListener( "click", saveScore, false );
+    // FIXME: displayNewItem() not available here
+    // figure out how to call out to a different template/widget/thing
+    //displayNewItem();
 
-  var playAgainBtn = document.getElementById("playAgain-button");
-  playAgainBtn.addEventListener( "click", startGame, false );
-
-  var endGameBtn = document.getElementById("end-button");
-  endGameBtn.addEventListener( "click", reSet, false );
-
-  var nameField = document.getElementById("user-name");
-
-  var theCount = document.getElementById("count");
-  var theScore = document.getElementById("score");
-
-  function startGame(){
-    reSet();
-
-    //remove screens if they are visible
-    if (introScreen.getAttribute("class") === "screen"){
-      introScreen.setAttribute("class", "no-screen");
-    }
-
-    if (endScreen.getAttribute("class") === "screen"){
-      endScreen.setAttribute("class", "no-screen");
-    }
-
-    if (screenArea.getAttribute("class") === ""){
-      screenArea.setAttribute("class", "invisible");
-    }
-
-    displayNewItem();
-    startCountDown();
-  }
-
-  function displayEndScreen() {
-    theItemTarget.removeAttribute("class");
-    theItemTarget.setAttribute("draggable", "false");
-    if (screenArea.getAttribute("class") === "invisible"){
-      screenArea.setAttribute("class", "");
-    }
-    //determine which end screen message to post
-    if ( getScore() < 100 ){ //try harder
-      endScreen.setAttribute("class", "screen");
-      document.getElementById("saveScoreOpt").innerHTML = "Your score is<br><span class='large black-score'>" + getScore() + "</span> <br> Play again to improve your score!";
-        saveBtn.setAttribute("class", "invisible");
-        nameField.setAttribute("class", "invisible");
-      } else if ( getScore() >= 100 ){ //well done
-          endScreen.setAttribute("class", "screen");
-          document.getElementById("saveScoreOpt").innerHTML = "Your score is<br> <span class='large high-score'>" + getScore() + "</span> <br> Nice job! Add your name to the leader board or play again!";
-            //} else if ( getScore() >= 100 && isHighScore() ){ //congrats, yours is a top score
-      //endScreen.setAttribute("class", "screen");
-    //  document.getElementById("saveScoreOpt").innerHTML = "Your score is<br> <span class='large high-score'>" + getScore() + "</span> <br> Nice job! Add your name to the leader board or play again!";
-        saveBtn.setAttribute("class", " ");
-        nameField.setAttribute("class", " ");
+    // TODO: move this to a UI helper
+    var displayEndScreen = function() {
+      // do some UI cleanups first on theItemTarget
+      console.log("ENDSCREEN");
+      if (Session.get("score") < 100) {
+        console.log("WAHJEY!");
+        $("#popup-screens").toggleClass("invisible");
+        $("#introScreen").removeClass("screen").addClass("no-screen");
+        $("#endScreen").removeClass("no-screen").addClass("screen");
+        Session.set("saveScoreOptMsg", "Your score is<br><span class='large black-score'>" + Session.get("score") + "</span> <br> Play again to improve your score!");
+        $("#save-button").hide();
+        $("#user-name").hide();
+      } else if (Session.get("score") >= 100) {
+        $("#endscreen").addClass("screen");
+        Session.set("saveScoreOptMsg", "Your score is<nr><span class='large high-score'>" + Session.get("score") + "</span><br>Nice job! Add your name to the leader board or play again!");
+        $("#save-button").show();
+        $("#user-name").show();
       }
+    }
+
+    var timer = function() {
+      if (count > 0) {
+        count--;
+        Session.set("count", count);
+      } else {
+        Meteor.clearInterval(interval);
+        displayEndScreen();
+        if (Session.get("score") >= 150) {
+          // FIXME: startSpriteAnimation();
+        }
+      }
+    }
+
+    var interval = Meteor.setInterval(timer, 1000);
+
+  },
+
+  'click #end-button': function(event) {
+    Session.set('count', 20);
+    Session.set('score', 0);
+
+    // FIXME: sprite not defined here
+    //sprite.setAttribute("class", "");
+
+    // reset some screen classes
+    $("#introScreen").toggleClass("no-screen").toggleClass("screen");
+    $("#endScreen").toggleClass("no-screen").toggleClass("screen");
+    $("#score").toggleClass("green-score").toggleClass("black-score");
   }
+}
 
-  function reSet(){
-    if ( count !== 20 ){
-      count = 20;
-    }
-    //reset counter to 20 seconds
-    // FIXME: these vars appear to not have values. maybe template not loaded yet.
-    theCount.innerHTML = 20;
-
-    //reset score to zero
-    theScore.innerHTML = 0;
-    theScore.setAttribute("class", "black-score");
-
-    sprite.setAttribute("class", "");
-
-    //add intro screen
-    if (introScreen.getAttribute("class") === "no-screen"){
-      introScreen.setAttribute("class", "screen");
-    }
-
-    //remove end screen if it's visible
-    if (endScreen.getAttribute("class") === "screen"){
-      endScreen.setAttribute("class", "no-screen");
-    }
-
-    //reset score color
-    if (theScore.getAttribute("class") === "green-score"){
-      theScore.setAttribute("class", "black-score");
-    }
-
-  }
-
-};
