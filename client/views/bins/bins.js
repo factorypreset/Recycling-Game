@@ -66,15 +66,15 @@ Template.bins.rendered = function() {
         var targetId = dropTarget.get('id');
 
         if ( targetId === "binR" ) {
-          dropTarget.setAttribute("src", "images/singlestream.png");
+          dropTarget.setAttribute("src", "singlestream.png");
           theItemTarget.setAttribute("class", "drag");
         }
         if ( targetId === "binT" ) {
-          dropTarget.setAttribute("src", "images/trash.png");
+          dropTarget.setAttribute("src", "trash.png");
           theItemTarget.setAttribute("class", "drag");
         }
         if ( targetId === "binC" ) {
-          dropTarget.setAttribute("src", "images/compost.png");
+          dropTarget.setAttribute("src", "compost.png");
           theItemTarget.setAttribute("class", "drag");
         }
 
@@ -85,15 +85,15 @@ Template.bins.rendered = function() {
         var targetId = dropTarget.get('id');
 
         if ( targetId === "binR" ) {
-          dropTarget.setAttribute("src", "images/singlestream-hover.png");
+          dropTarget.setAttribute("src", "singlestream-hover.png");
           theItemTarget.setAttribute("class", "drag shrink-it");
         }
         if ( targetId === "binT" ) {
-          dropTarget.setAttribute("src", "images/trash-hover.png");
+          dropTarget.setAttribute("src", "trash-hover.png");
           theItemTarget.setAttribute("class", "drag shrink-it");
         }
         if ( targetId === "binC" ) {
-          dropTarget.setAttribute("src", "images/compost-hover.png");
+          dropTarget.setAttribute("src", "compost-hover.png");
           theItemTarget.setAttribute("class", "drag shrink-it");
         }
       }
@@ -126,30 +126,24 @@ Template.bins.rendered = function() {
         removeHoverState(e);
 
         if ( targetId === "binR" && thisItemId === "recycling" || targetId === "binR" && thisItemId === "recycling-compost" ) {
-          console.log('CORRECT BIN');
           score += 10;
           // correctBin.play();
         } else if ( targetId === "binT" && thisItemId === "trash" ) {
-          console.log('CORRECT BIN');
           score += 10;
           //correctBin.play();
         } else if ( targetId === "binC" && thisItemId === "compost" || targetId === "binC" && thisItemId === "recycling-compost") {
-          console.log('CORRECT BIN');
           score += 10;
           //correctBin.play();
         } else {
-          console.log('WRONG BIN');
           score -= 10;
           //shakeBin(dropTarget);
         }
 
         // update score in session
         Session.set("score", score);
-        console.log("NOW SCORE IS " + score);
 
         // pick a new item
         setNewItem();
-        console.log('WOULD HAVE PICKED A NEW ITEM');
 
       });
 
