@@ -1,256 +1,167 @@
+Template.bins.itemBin = function() {
+  return Session.get("itemBin");
+}
+
+Template.bins.itemSrc = function() {
+  return Session.get("itemSrc");
+}
+
+/*
+Template.bins.events = {
+  'drag #theItem': function(event) {
+    event.preventDefault();
+  },
+  'drop #theItem': function(event) {
+    event.preventDefault();
+
+    var setNewItem = function() {
+      var items = Items.find();
+      var i = Math.floor(Math.random() * items.count());
+      var item = items.fetch()[i];
+      Session.set("itemBin", item.bin);
+      Session.set("itemSrc", item.src);
+    }();
+  }
+
+}
+*/
+
+
 Template.bins.rendered = function() {
 
-	Meteor.Loader.loadJs("http://yui.yahooapis.com/3.17.2/build/yui/yui-min.js", 10000).done(yuiLoaded);
-
-	var data = {
-		"myImages": [
-			{
-				"id": "recycling",
-				"src": "/aluminum-cans.png"
-			},
-            {
-				"id": "compost",
-				"src": "/cutlery-compostable.png"
-			},
-            {
-				"id": "recycling-compost",
-				"src": "/paperbag-sm.png"
-			},
-            {
-				"id": "compost",
-				"src": "/paper-take-away-container.png"
-			},
-            {
-				"id": "recycling",
-				"src": "/plastic-cup.png"
-			},
-			{
-				"id": "recycling",
-				"src": "/foil-wrapper.png"
-			},
-			{
-				"id": "compost",
-				"src": "/tea-bag.png"
-			},
-			{
-				"id": "trash",
-				"src": "/wrapper-granola.png"
-			},
-            {
-				"id": "recycling",
-				"src": "/bleach.png"
-			},
-            {
-				"id": "compost",
-				"src": "/chopsticks.png"
-			},
-            {
-				"id": "compost",
-				"src": "/pizza-box.png"
-			},
-			{
-				"id": "recycling-compost",
-				"src": "/brownbag.png"
-			},
-			{
-				"id": "compost",
-				"src": "/sushi.png"
-			},
-			{
-				"id": "recycling",
-				"src": "/aluminum-foil.png"
-			},
-			{
-				"id": "trash",
-				"src": "/cutlery.png"
-			},
-			{
-				"id": "trash",
-				"src": "/chip_bag.png"
-			},
-			{
-				"id": "compost",
-				"src": "/napkin.png"
-			},
-			{
-				"id": "trash",
-				"src": "/styrofoam.png"
-			},
-			{
-				"id": "compost",
-				"src": "/compostable_plasticcup.png"
-			},
-			{
-				"id": "compost",
-				"src": "/compostable_plate.png"
-			},
-			{
-				"id": "compost",
-				"src": "/papercoffeecup.png"
-			},
-			{
-				"id": "compost",
-				"src": "/apple.png"
-			},
-			{
-				"id": "trash",
-				"src": "/ketchup_mustard_packets.png"
-			},
-            {
-				"id": "trash",
-				"src": "/styrofoam_coffeecup.png"
-			},
-            {
-				"id": "trash",
-				"src": "/creamer.png"
-			},
-            {
-				"id": "recycling-compost",
-				"src": "/cuptray.png"
-			},
-            {
-				"id": "recycling",
-				"src": "/glassbottle.png"
-			},
-            {
-				"id": "recycling-compost",
-				"src": "/glovebox.png"
-			},
-            {
-				"id": "recycling",
-				"src": "/ojcarton.png"
-			},
-            {
-				"id": "recycling",
-				"src": "/waterbottle.png"
-			}
-		]
-	};
-
-	var theItemTarget = document.getElementsByTagName("img")[0];
-	var theBins= document.getElementById("bins");
-
-	function displayNewItem () {
-		var i = Math.floor(Math.random() * data.myImages.length);
-		var theNewImageSource = data.myImages[i].src;
-		var theNewImageId = data.myImages[i].id;
-		theItemTarget.setAttribute("src", theNewImageSource);
-		theItemTarget.setAttribute("id", theNewImageId);
-	}
-
-	displayNewItem();
-
-	function shakeBin(target){
-		target.setAttribute("class", "target shake yui3-dd-drop");
-		setTimeout(function() {
-			target.setAttribute("class", "target yui3-dd-drop");
-		}, 300);	
-	}
-	 	
-//DRAG  (YUI http://yuilibrary.com/yui/docs/dd/)
+  var theItemTarget = document.getElementsByTagName("img")[0];
+  var theBins= document.getElementById("bins");
+  var score = Session.get("score") || 0;
 
 	var yuiLoaded = function() {
 
-	YUI({ filter: 'raw' }).use('dd-drop', 'dd-proxy', 'dd-constrain', 'dd-ddm-drop', function(Y) {
+    YUI({ filter: 'raw' }).use('dd-drop', 'dd-proxy', 'dd-constrain', 'dd-ddm-drop', function(Y) {
 
-		var ddItem = new Y.DD.Drag({
-	        node: '.drag',
-		});
+      var setNewItem = function() {
+        var items = Items.find();
+        var i = Math.floor(Math.random() * items.count());
+        var item = items.fetch()[i];
+        Session.set("itemBin", item.bin);
+        Session.set("itemSrc", item.src);
+      };
 
-		ddItem.on('drag:start', function(){
-	        var	n = this.get('node');
-	            n.setStyle('opacity', .25);
-		});
+      var ddItem = new Y.DD.Drag({
+            node: '.drag',
+      });
 
-		function removeHoverState(e) {
-			var dropTarget = e.drop.get('node');
-			var targetId = dropTarget.get('id');
+      ddItem.on('drag:start', function(){
+            var	n = this.get('node');
+                n.setStyle('opacity', .25);
+      });
 
-	        if ( targetId === "binR" ){
-	        	dropTarget.setAttribute("src", "images/singlestream.png");
-	        	theItemTarget.setAttribute("class", "drag");
-	        }
-	        if ( targetId === "binT" ){
-	        	dropTarget.setAttribute("src", "images/trash.png");
-	        	theItemTarget.setAttribute("class", "drag");
-	        }
-	        if ( targetId === "binC" ){
-	        	dropTarget.setAttribute("src", "images/compost.png");
-	        	theItemTarget.setAttribute("class", "drag");
-	        }
+      var shakeBin = function(target) {
+        target.setAttribute("class", "target shake yui3-dd-drop");
+        setTimeout(function() {
+          target.setAttribute("class", "shake");
+        }, 300);
+      };
 
-	    }
+      function removeHoverState(e) {
+        var dropTarget = e.drop.get('node');
+        var targetId = dropTarget.get('id');
 
-	    function addHoverState(e){
-	    	var dropTarget = e.drop.get('node');
-			var targetId = dropTarget.get('id');
+        if ( targetId === "binR" ) {
+          dropTarget.setAttribute("src", "images/singlestream.png");
+          theItemTarget.setAttribute("class", "drag");
+        }
+        if ( targetId === "binT" ) {
+          dropTarget.setAttribute("src", "images/trash.png");
+          theItemTarget.setAttribute("class", "drag");
+        }
+        if ( targetId === "binC" ) {
+          dropTarget.setAttribute("src", "images/compost.png");
+          theItemTarget.setAttribute("class", "drag");
+        }
 
-	    	if ( targetId === "binR" ){
-	        	dropTarget.setAttribute("src", "images/singlestream-hover.png");
-	        	theItemTarget.setAttribute("class", "drag shrink-it");
-	        }
-	        if ( targetId === "binT" ){
-	        	dropTarget.setAttribute("src", "images/trash-hover.png");
-	        	theItemTarget.setAttribute("class", "drag shrink-it");
-	        }
-	        if ( targetId === "binC" ){
-	        	dropTarget.setAttribute("src", "images/compost-hover.png");
-	        	theItemTarget.setAttribute("class", "drag shrink-it");
-	        }
-	    }
+      }
 
-	    ddItem.on('drag:enter', function(e){
-			addHoverState(e);	    	
-		});
+      function addHoverState(e) {
+        var dropTarget = e.drop.get('node');
+        var targetId = dropTarget.get('id');
 
-		ddItem.on('drag:exit', function(e){
-			 removeHoverState(e);
-		});
-		
-		var dropNodes = Y.Node.all('.target');
-		
-		dropNodes.each(function(v, k) {
-	    	var tar = new Y.DD.Drop({
-	        node: v
-		        });
-	    });   
+        if ( targetId === "binR" ) {
+          dropTarget.setAttribute("src", "images/singlestream-hover.png");
+          theItemTarget.setAttribute("class", "drag shrink-it");
+        }
+        if ( targetId === "binT" ) {
+          dropTarget.setAttribute("src", "images/trash-hover.png");
+          theItemTarget.setAttribute("class", "drag shrink-it");
+        }
+        if ( targetId === "binC" ) {
+          dropTarget.setAttribute("src", "images/compost-hover.png");
+          theItemTarget.setAttribute("class", "drag shrink-it");
+        }
+      }
 
-		Y.DD.DDM.on('drag:drophit', function(e) {
-   
-	       	var itemDragged = e.drag.get('node');
-	       	var thisItemId = itemDragged.get('id');
+      ddItem.on('drag:enter', function(e) {
+        addHoverState(e);
+      });
 
-	       	var dropTarget = e.drop.get('node');
-	       	var targetId = dropTarget.get('id');
+      ddItem.on('drag:exit', function(e) {
+        removeHoverState(e);
+      });
 
-	       	var theData = data.myImages;
+      var dropNodes = Y.Node.all('.target');
 
-	       	removeHoverState(e);	       
+      dropNodes.each(function(v, k) {
+        var tar = new Y.DD.Drop({
+          node: v
+        });
+      });
 
-	       	if ( targetId === "binR" && thisItemId === "recycling" || targetId === "binR" && thisItemId === "recycling-compost"){
-	       	 	addPoints();
-	       	 	correctBin.play();
-	       	} else if ( targetId === "binT" && thisItemId === "trash" ){
-		       	addPoints();
-		       	correctBin.play();
-		    } else if ( targetId === "binC" && thisItemId === "compost" || targetId === "binC" && thisItemId === "recycling-compost"){
-		       	addPoints();
-		       	correctBin.play();
-		    } else {
-		       	subtractPoints();
-		       	shakeBin(dropTarget);
-		    }
+      Y.DD.DDM.on('drag:drophit', function(e) {
 
-	       	displayNewItem ()	
-	    });
+        var itemDragged = e.drag.get('node');
+        // var thisItemId = itemDragged.get('id');
+        var thisItemId = Session.get("itemBin");
 
-	    ddItem.on('drag:end', function(e) {
-	       	e.preventDefault();
-	        var n = this.get('node');
-			n.setStyle('opacity', '1');
-		});
-	});
+        var dropTarget = e.drop.get('node');
+        var targetId = dropTarget.get('id');
 
-	}
+        removeHoverState(e);
+
+        if ( targetId === "binR" && thisItemId === "recycling" || targetId === "binR" && thisItemId === "recycling-compost" ) {
+          console.log('CORRECT BIN');
+          score += 10;
+          // correctBin.play();
+        } else if ( targetId === "binT" && thisItemId === "trash" ) {
+          console.log('CORRECT BIN');
+          score += 10;
+          //correctBin.play();
+        } else if ( targetId === "binC" && thisItemId === "compost" || targetId === "binC" && thisItemId === "recycling-compost") {
+          console.log('CORRECT BIN');
+          score += 10;
+          //correctBin.play();
+        } else {
+          console.log('WRONG BIN');
+          score -= 10;
+          //shakeBin(dropTarget);
+        }
+
+        // update score in session
+        Session.set("score", score);
+        console.log("NOW SCORE IS " + score);
+
+        // pick a new item
+        setNewItem();
+        console.log('WOULD HAVE PICKED A NEW ITEM');
+
+      });
+
+      ddItem.on('drag:end', function(e) {
+        e.preventDefault();
+        var n = this.get('node');
+        n.setStyle('opacity', '1');
+      });
+    });
+
+	};
+
+	Meteor.Loader.loadJs("http://yui.yahooapis.com/3.17.2/build/yui/yui-min.js", yuiLoaded, 10000);
 
 };

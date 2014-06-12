@@ -4,22 +4,30 @@ Template.screens.saveScoreOptMsg = function() {
 
 Template.screens.events = {
   'click .start-button': function(event) {
+
     var count = 20;
     Session.set("count", count);
     Session.set("score", 0);
 
     $("#popup-screens").toggleClass("invisible");
 
+
     // FIXME: displayNewItem() not available here
     // figure out how to call out to a different template/widget/thing
     //displayNewItem();
 
+    // TODO: move this to an event on the bins view
+    var setNewItem = function() {
+      var items = Items.find();
+      var i = Math.floor(Math.random() * items.count());
+      var item = items.fetch()[i];
+      Session.set("itemBin", item.bin);
+      Session.set("itemSrc", item.src);
+    }();
+
     // TODO: move this to a UI helper
     var displayEndScreen = function() {
-      // do some UI cleanups first on theItemTarget
-      console.log("ENDSCREEN");
       if (Session.get("score") < 100) {
-        console.log("WAHJEY!");
         $("#popup-screens").toggleClass("invisible");
         $("#introScreen").removeClass("screen").addClass("no-screen");
         $("#endScreen").removeClass("no-screen").addClass("screen");
@@ -32,7 +40,7 @@ Template.screens.events = {
         $("#save-button").show();
         $("#user-name").show();
       }
-    }
+    };
 
     var timer = function() {
       if (count > 0) {
@@ -45,7 +53,7 @@ Template.screens.events = {
           // FIXME: startSpriteAnimation();
         }
       }
-    }
+    };
 
     var interval = Meteor.setInterval(timer, 1000);
 

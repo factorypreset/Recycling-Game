@@ -1,3 +1,7 @@
+Template.hiscoresList.score = function() {
+  return Session.get('score') || 0;
+};
+
 Template.hiscoresList.helpers({
   hiscores: function() {
     return Hiscores.find();
@@ -17,8 +21,10 @@ Template.hiscoresList.helpers({
     }
 
     //save name and score to JSON object
-    scoreData.theStats.push( {"player": nameField.value,
-                "score": getScore() } );
+    scoreData.theStats.push({
+      "player": nameField.value,
+      "score": getScore()
+    });
 
     //store JSON object locally
     var stringObj = JSON.stringify(scoreData);
